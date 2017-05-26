@@ -1,19 +1,12 @@
-// import {
-//   apiURL,
-//   httpGet,
-//   httpPost,
-//   httpUpdate,
-//   httpDelete
-// } from '../utils/http'
+import {
+  apiURL,
+  httpGet,
+} from './fetch'
+
+export function getUsers() {
+  return httpGet(`${apiURL}/users`)
+}
 
 export default {
   getUsers
-}
-
-export function getUsers() {
-  let users=[
-    {"name":"erick","lastName":"garcia"}
-  ]
-  return users;
-  //return httpGet(`${apiURL}/users`)
 }
