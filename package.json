@@ -67,6 +67,7 @@
     "style-loader": "^0.13.1",
     "webpack": "^1.14.0",
     "whatwg-fetch": "^2.0.1",
-    "redux-logger": "^3.0.1"
+    "redux-logger": "^3.0.1",
+    "isomorphic-fetch": "^2.2.1"
   }
 }
