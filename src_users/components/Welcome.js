@@ -59,20 +59,18 @@ class Welcome extends Component {
     let weeksItems=[];
     const { users:{users},weeks:{weeks} }=this.props;
 
-    console.log("props..",weeks)
-   
     return (
       <div className="container">
 
           <div className="fields-section">
-            <span>Select user: </span>
+            <div className="label-box">Select user:</div>
             <div className="field-box">
               <UsersSelect users={users} onChangeSelectOption={ this.onChangeSelectOption }/>
             </div>
           </div>
 
           <div className="fields-section">
-            <span>Pick a date: </span>
+            <div className="label-box">Pick up a date:</div>
             <div className="field-box">
               <UsersDatePicker date={this.state.startDate} onClickDatePicker={this.onClickDatePicker}/>
             </div>

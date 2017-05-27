@@ -25,6 +25,9 @@
 }
 
 .buttons-section button{
-
   margin-right: 10px;
+}
+
+.label-box{
+  flex-basis: 15%
 }
