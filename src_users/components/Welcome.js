@@ -1,10 +1,11 @@
 import React,{ Component } from "react";
 import { connect } from "react-redux";
-import { FormControl } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import "../stylesheets/welcome.css";
 
 import UsersDatePicker from './UsersDatePicker';
 import UsersSelect from './UsersSelect';
+import WeekDetails from './WeekDetails';
 
 /*date picker stuff*/
 import DatePicker from 'react-datepicker';
@@ -54,17 +55,12 @@ class Welcome extends Component {
 
   render() {
     const UsersDropdown="";
-    const { users:{users} }=this.props;
+    let weekDetailsComp="";
+    let weeksItems=[];
+    const { users:{users},weeks:{weeks} }=this.props;
 
-    let weekDetailsComp=
-      <div>
-        <div>For Month {this.state.selectedMonth} We found the following weeks:</div>
-        <div>
-          <div>Week <span>19</span></div>
-          <div>Days in week:<span> 8,9,10,11,12,13,14</span></div>
-        </div>
-      </div>
-
+    console.log("props..",weeks)
+   
     return (
       <div className="container">
 
@@ -83,14 +79,14 @@ class Welcome extends Component {
           </div>
 
           {
-            ( this.state.showWeekDetails ) ?
-            (
-              weekDetailsComp
-            )
+            ( this.state.showWeekDetails ) ? ( <WeekDetails weeks={ weeks } /> )
             : <div></div>
           }
           
-
+          <div className="fields-section buttons-section">
+            <Button bsStyle="success">Accept</Button>
+            <Button bsStyle="danger">Reject</Button>
+          </div>
       </div>
     );
   }
