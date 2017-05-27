@@ -29,7 +29,7 @@ class Welcome extends Component {
   }
   componentWillMount(){
     //fetch users 
-    //this.props.dispatch( fetchUsersRequest() );
+    this.props.dispatch( fetchUsersRequest() );
     //fetch weeks for the current date
     // this.props.dispatch( fetchWeeksByMonth() )
     this.getWeekDetails();

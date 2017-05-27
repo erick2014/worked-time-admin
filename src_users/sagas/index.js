@@ -9,6 +9,7 @@ function runWatchers(watchers) {
 
 export default function* rootSaga() {
   yield [
+    ...runWatchers(usersWatchers),
     ...runWatchers(weeksWatchers)
     
   ]

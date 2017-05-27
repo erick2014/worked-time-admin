@@ -3,11 +3,11 @@ import { push } from 'react-router-redux'
 import { FETCH_USERS_REQUEST } from '../constants'
 
 import { usersActions } from '../actions'
-import { usersApi } from '../api'
+import { api } from '../api'
 
 export function* fetchUsers(action) {
   try {
-    const users = yield call(usersApi.getUsers)
+    const users = yield call(api.getUsers)
     yield put(usersActions.setUsers(users))
   } catch (e) {
     console.error(`${action.type} failed: ${e.message}`)
