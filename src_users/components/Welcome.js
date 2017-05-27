@@ -1,7 +1,7 @@
 import React,{ Component } from "react";
 import { connect } from "react-redux";
+import { FormControl } from "react-bootstrap";
 import "../stylesheets/welcome.css";
-// import { listWelcomeItems } from "../actions/welcome";
 
 import { fetchUsersRequest } from '../actions';
 
@@ -14,9 +14,26 @@ class Welcome extends Component {
   // render
   render() {
     console.log("component props..",this.props)
+    const UsersDropdown="";
+    const { users:{users} }=this.props;
+
+
+    const usersItems=users.map( (user)=>{
+      let option=<option>{user.username}</option>
+      return option;
+    } )
+
+    console.log("usersItems ", usersItems)
     return (
       <div className="test">
-        Home page here..
+          <div className="search-box">
+            <span>Select user: </span>
+            <div className="user-dropdown">
+              <FormControl componentClass="select" placeholder="select">
+                {usersItems}
+              </FormControl>
+            </div>
+          </div>
       </div>
     );
   }
@@ -29,8 +46,4 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-export default connect(mapStateToProps)(Welcome)
-
-
-
-// export default Welcome;
+export default connect(mapStateToProps)(Welcome);

@@ -5,7 +5,6 @@ import {
 
 
 export function fetchUsersRequest() {
-  debugger;
   return {
     type: FETCH_USERS_REQUEST
   }

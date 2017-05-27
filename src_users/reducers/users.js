@@ -8,8 +8,6 @@ import {
 export function users(state = [], { type, payload }) {
   switch (type) {
     case FETCH_USERS_SUCCESS:
-    console.log("calling reducer..")
-    debugger;
       return payload.users
     
     default:

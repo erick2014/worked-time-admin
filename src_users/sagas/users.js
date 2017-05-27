@@ -6,11 +6,8 @@ import { usersActions } from '../actions'
 import { usersApi } from '../api'
 
 export function* fetchUsers(action) {
-  console.log("fetching users saga..")
-  debugger;
   try {
     const users = yield call(usersApi.getUsers)
-    //debugger;
     yield put(usersActions.setUsers(users))
   } catch (e) {
     console.error(`${action.type} failed: ${e.message}`)
