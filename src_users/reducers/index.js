@@ -1,18 +1,12 @@
 import { combineReducers } from "redux"
 import { routerReducer } from "react-router-redux"
-import users, * as usersSelectors from "./users"
+import users from "./users";
+import weeks from "./weeks";
 
 const rootReducer = combineReducers({
   routing: routerReducer,
-  users: users
+  users: users,
+  weeks: weeks
 })
 
 export default rootReducer
-
-// export function getAllUsers({ users }) {
-//   return usersSelectors.getAllUsers(users)
-// }
-
-// export function getCurrentUser({ users }) {
-//   return usersSelectors.getCurrentUser(users)
-// }

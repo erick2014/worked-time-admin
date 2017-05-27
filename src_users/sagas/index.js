@@ -1,4 +1,5 @@
-import usersWatchers from './users'
+import usersWatchers from './users';
+import weeksWatchers from './weeks';
 
 function runWatchers(watchers) {
   return Object
@@ -8,6 +9,7 @@ function runWatchers(watchers) {
 
 export default function* rootSaga() {
   yield [
-    ...runWatchers(usersWatchers)
+    ...runWatchers(weeksWatchers)
+    
   ]
 }

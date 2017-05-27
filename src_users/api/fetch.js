@@ -23,7 +23,6 @@ export const apiURL = `https://${host}/api`
 
 export async function httpGet(url) {
   const response = await fetch(url, {method:"GET", headers: buildHeaders() })
-
   return await checkStatus(response).json()
 }
 

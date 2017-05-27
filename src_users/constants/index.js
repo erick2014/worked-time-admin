@@ -1,3 +1,7 @@
+/*Users constants*/
 export const FETCH_USERS_REQUEST = 'FETCH_USERS_REQUEST'
-export const FETCH_USER_SUCCESS = 'FETCH_USER_SUCCESS'
 export const FETCH_USERS_SUCCESS = 'FETCH_USERS_SUCCESS'
+
+/*Weeks constants*/
+export const FETCH_WEEKS_REQUEST = 'FETCH_WEEKS_REQUEST'
+export const FETCH_WEEKS_SUCCESS = 'FETCH_WEEKS_SUCCESS'

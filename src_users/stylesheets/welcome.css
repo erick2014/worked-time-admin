@@ -1,9 +1,21 @@
-.search-box{
+.fields-section{
   display: flex;
   align-items: center;
+  padding-bottom: 20px;
 }
 
-.user-dropdown{
-  width: 200px;
+.field-box{
+  width: 234px;
   padding: 0 10px;
+}
+
+.container{
+  margin-top: 20px;
+}
+
+.input-box{
+  width: 214px;
+  height: 34px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }

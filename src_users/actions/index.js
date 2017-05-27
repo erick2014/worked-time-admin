@@ -1,7 +1,10 @@
-import usersActions from './users'
+import usersActions from './users';
+import weeksActions from './weeks';
 
 export {
-  usersActions
+  usersActions,
+  weeksActions
 }
 
-export * from './users'
+export * from './users';
+export * from './weeks';

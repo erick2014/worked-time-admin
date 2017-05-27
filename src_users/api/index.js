@@ -1,7 +1,7 @@
-import usersApi from './users'
+import api from './api'
 
 export {
-  usersApi
+  api
 }
 
-export * from './users'
+export * from './api'
