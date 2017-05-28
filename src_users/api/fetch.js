@@ -28,8 +28,6 @@ export async function httpGet(url) {
 
 export async function httpPut(url, data) {
   const body=JSON.stringify(data)
-  debugger;
-
   const response = await fetch(url, {method: 'PUT',headers: buildHeaders(),body: body })
 
   return await checkStatus(response).json()

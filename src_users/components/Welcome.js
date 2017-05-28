@@ -15,7 +15,7 @@ import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
 
 
-import { fetchUsersRequest,fetchWeeksRequest,approveWeekRequest } from '../actions';
+import { fetchUsersRequest,fetchWeeksRequest,processWeekRequest } from '../actions';
 
 // App component
 class Welcome extends Component {
@@ -29,8 +29,11 @@ class Welcome extends Component {
       modalTitle:"",
       modalBody:"",
       showModal:false,
+      modalMode:"validation",
       weekSelectedId:"",
-      weekSelectedNumber:""
+      weekSelectedNumber:"",
+      clickedBtnText:""
+
     }
     this.onClickDatePicker=this.onClickDatePicker.bind(this);
     this.onChangeSelectOption=this.onChangeSelectOption.bind(this);
@@ -46,9 +49,31 @@ class Welcome extends Component {
     this.showUpmodalWithInfo=this.showUpmodalWithInfo.bind(this);
 
   }
+
+  componentWillReceiveProps(nextProps){
+    const { processedWeek }=nextProps;
+    //check if we have any response from server to show up in modal
+    if( processedWeek && Object.keys( processedWeek).length>0  ) 
+      this.showUpResponseMessageInModal(nextProps.processedWeek)
+  }
+
+
   componentWillMount(){
     //fetch users 
     this.props.dispatch( fetchUsersRequest() );
+  }
+
+  showUpResponseMessageInModal( processedWeek ){
+    debugger;
+    let status="";
+    if( processedWeek && processedWeek.status && processedWeek.status=="approve" ) status="approve";
+    else if( processedWeek && processedWeek.status && processedWeek.status=="rejected" ) status="rejected";
+    //set the message to show up in modal
+    this.setState({
+      modalBody:`Your week has been ${processedWeek.status}`,
+      showModal:true,
+      modalMode:"informative"
+    })
   }
 
   getWeekDetails(monthNumber){
@@ -103,14 +128,29 @@ class Welcome extends Component {
 
   /*Accept option handler for modal*/
   onClickAcceptBtnModal(){
-    //dispatch the action to approve or deny a week
-    console.log("approving with week id ",this.state.weekSelectedId)
-    this.props.dispatch( approveWeekRequest( this.state.weekSelectedId, 3, 'approved' ) );
+    
+    let status="";
+
+    if( this.state.modalMode=="validation" ){
+      if( this.state.clickedBtnText=="approve" ) status="approve";
+      else if( this.state.clickedBtnText=="reject" ) status="rejected";
+
+      this.setState({showModal:false});
+      //dispatch the action to approve or deny a week
+      this.props.dispatch( processWeekRequest( this.state.weekSelectedId, 3, status ) );
+    }
+    else if( this.state.modalMode=="informative" ){
+      debugger;
+      this.setState({showModal:false})
+    }
+
+    
   }
 
   /*Open the modal and validate the clicked option*/ 
   showUpmodalWithInfo( clickedBtnText,weekId,weekNumber ){
     this.setState({ 
+      clickedBtnText:clickedBtnText,
       weekSelectedId:weekId,
       weekSelectedNumber:weekNumber,
       modalBody:`Are you sure you want to ${clickedBtnText} week #${weekNumber} ?`,
@@ -118,18 +158,18 @@ class Welcome extends Component {
     });
   }
 
+  
+
   render() {
     const UsersDropdown="";
     let weekDetailsComp="";
     let weeksItems=[];
     const { users:{users},weeks }=this.props;
 
-    console.log("props for welcome", this.props)
-
     return (
       <div className="container">
 
-          <MyModal 
+          <MyModal
             showModal={this.state.showModal}
             body={this.state.modalBody}
             onAccept={ this.onClickAcceptBtnModal }
@@ -172,7 +212,8 @@ function mapStateToProps(state, ownProps) {
   return {
     users: state.users,
     weeks: state.weeks,
-    currentUser: state.currentUser
+    currentUser: state.currentUser,
+    processedWeek: state.processedWeek
   }
 }
 

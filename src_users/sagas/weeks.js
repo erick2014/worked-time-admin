@@ -1,6 +1,6 @@
 import { takeLatest, put, call } from 'redux-saga/effects'
 import { push } from 'react-router-redux'
-import { FETCH_WEEKS_REQUEST,APPROVE_WEEK_REQUEST } from '../constants'
+import { FETCH_WEEKS_REQUEST,PROCESSED_WEEK_REQUEST } from '../constants'
 
 import { weeksActions } from '../actions'
 import { api } from '../api'
@@ -49,12 +49,13 @@ export function* fetchWeeks(action) {
 }
 
 
-export function* approveWeek(action) {
+export function* processedWeek(action) {
   try {
     const { weekId,approverId,status }=action.payload;
-    const response = yield call( api.approveWeek,weekId,approverId,status );
-    debugger;
-    yield put( weeksActions.setApproveWeekResponse(response) );
+    //sent data to the server
+    const response = yield call( api.processWeek, weekId, approverId , status );
+    //sent response data to redux
+    yield put( weeksActions.processWeekResponse(response) );
     
   } catch (e) {
     console.error(`${action.type} failed: ${e.message}`)
@@ -62,8 +63,8 @@ export function* approveWeek(action) {
 }
 
 
-export function* watchApproveWeek() {
-  yield takeLatest(APPROVE_WEEK_REQUEST, approveWeek)
+export function* watchProcessedWeek() {
+  yield takeLatest(PROCESSED_WEEK_REQUEST, processedWeek)
 }
 
 export function* watchFetchWeeks() {
@@ -73,5 +74,5 @@ export function* watchFetchWeeks() {
 
 export default {
   watchFetchWeeks,
-  watchApproveWeek
+  watchProcessedWeek
 }

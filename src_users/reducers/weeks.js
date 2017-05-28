@@ -3,6 +3,7 @@ import { combineReducers } from 'redux'
 import {
   FETCH_WEEKS_REQUEST,
   FETCH_WEEKS_SUCCESS,
+  PROCESSED_WEEK_SUCCESS
  } from '../constants'
 
 export function weeks(state = [], { type, payload }) {
@@ -15,4 +16,12 @@ export function weeks(state = [], { type, payload }) {
   }
 }
 
-export default weeks;
+export function processedWeek( state={},{ type,payload } ){
+ switch (type) {
+    case PROCESSED_WEEK_SUCCESS:
+      return payload.week
+    
+    default:
+      return state
+  }
+}
