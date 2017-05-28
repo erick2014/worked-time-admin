@@ -3,6 +3,7 @@ import {
   FETCH_WEEKS_SUCCESS,
   PROCESSED_WEEK_REQUEST,
   PROCESSED_WEEK_SUCCESS,
+  PROCESSED_WEEK_CLEAN_UP,
 } from '../constants'
 
 
@@ -34,11 +35,17 @@ export function processWeekResponse( week ) {
   }
 }
 
+export function cleanUpProcessedWeek(  ) {
+  return {
+    type: PROCESSED_WEEK_CLEAN_UP,
+  }
+}
 
 
 export default { 
   fetchWeeksRequest,
   setWeeks,
   processWeekRequest,
-  processWeekResponse
+  processWeekResponse,
+  cleanUpProcessedWeek
 }

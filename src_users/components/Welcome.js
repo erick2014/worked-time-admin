@@ -15,7 +15,7 @@ import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
 
 
-import { fetchUsersRequest,fetchWeeksRequest,processWeekRequest } from '../actions';
+import { fetchUsersRequest,fetchWeeksRequest,processWeekRequest,cleanUpProcessedWeek } from '../actions';
 
 // App component
 class Welcome extends Component {
@@ -32,7 +32,8 @@ class Welcome extends Component {
       modalMode:"validation",
       weekSelectedId:"",
       weekSelectedNumber:"",
-      clickedBtnText:""
+      clickedBtnText:"",
+      approvers:[]
 
     }
     this.onClickDatePicker=this.onClickDatePicker.bind(this);
@@ -53,10 +54,16 @@ class Welcome extends Component {
   componentWillReceiveProps(nextProps){
     const { processedWeek }=nextProps;
     //check if we have any response from server to show up in modal
-    if( processedWeek && Object.keys( processedWeek).length>0  ) 
-      this.showUpResponseMessageInModal(nextProps.processedWeek)
+    if( processedWeek && Object.keys( processedWeek).length>0  ){
+      let info={
+        modalBody:`Your week has been ${processedWeek.status}`,
+        showModal:true,
+        modalMode:"informative"
+      }
+      this.showUpmodalWithInfo(info)
+    }
+      
   }
-
 
   componentWillMount(){
     //fetch users 
@@ -64,21 +71,23 @@ class Welcome extends Component {
   }
 
   showUpResponseMessageInModal( processedWeek ){
-    debugger;
-    let status="";
-    if( processedWeek && processedWeek.status && processedWeek.status=="approve" ) status="approve";
-    else if( processedWeek && processedWeek.status && processedWeek.status=="rejected" ) status="rejected";
     //set the message to show up in modal
-    this.setState({
-      modalBody:`Your week has been ${processedWeek.status}`,
-      showModal:true,
-      modalMode:"informative"
-    })
+    this.setState()
   }
 
   getWeekDetails(monthNumber){
-    //dispatch an action to get all weeks using the selected user and month
-    this.props.dispatch( fetchWeeksRequest( monthNumber,this.state.userId ) )
+    //validate the user id
+    if(!this.state.userId ){
+      let info={ modalBody:`Please select an user`,showModal:true,modalMode:"informative" }
+      this.showUpmodalWithInfo( info );
+    }
+    else{
+      //reset modal mode
+      this.setState({modalMode:"validation"})
+      //dispatch an action to get all weeks using the selected user and month
+      this.props.dispatch( fetchWeeksRequest( monthNumber,this.state.userId ) )
+    }
+    
   }
 
   onClickDatePicker(date) {
@@ -104,6 +113,7 @@ class Welcome extends Component {
     const {weeks}=this.props;
     let weekId=null;
     let weekNumber=null;
+    let approvers=[];
 
     //look for the corresponding week id using the choosen day in calendar
     for( var i=0;i<weeks.length;i++ ){
@@ -111,12 +121,21 @@ class Welcome extends Component {
        if( week.days_in_week.indexOf( selectedDayNum )!==-1 ){
          weekId= week["week_id"];
          weekNumber= week["week_number"];
+         approvers= week["approvers"];
         break;
        }
     }
 
     if( weekId ) {
-      this.showUpmodalWithInfo( clickedBtn,weekId,weekNumber );
+      let info={ 
+        approvers:approvers,
+        clickedBtnText:clickedBtn,
+        weekSelectedId:weekId,
+        weekSelectedNumber:weekNumber,
+        modalBody:`The week #${weekNumber} is going to be ${clickedBtn}, is that ok?`,
+        showModal:true
+      }
+      this.showUpmodalWithInfo( info );
     }
       
   }
@@ -130,35 +149,34 @@ class Welcome extends Component {
   onClickAcceptBtnModal(){
     
     let status="";
+    let approverId="";
+
+    const {  processedWeek,dispatch }=this.props
 
     if( this.state.modalMode=="validation" ){
-      if( this.state.clickedBtnText=="approve" ) status="approve";
-      else if( this.state.clickedBtnText=="reject" ) status="rejected";
+      debugger;
+      //validate if we have the approverId
+      if( this.state.approvers && this.state.approvers.length>0 ) approverId=this.state.approvers[0];
+      else return false;
 
       this.setState({showModal:false});
       //dispatch the action to approve or deny a week
-      this.props.dispatch( processWeekRequest( this.state.weekSelectedId, 3, status ) );
+      this.props.dispatch( processWeekRequest( this.state.weekSelectedId, approverId, this.state.clickedBtnText ) );
     }
     else if( this.state.modalMode=="informative" ){
-      debugger;
-      this.setState({showModal:false})
+      //close the modal
+      this.setState({showModal:false,modalMode:"validation"})
+      //check if we have some response from server to clean
+      if( processedWeek && Object.keys( processedWeek).length>0  ) dispatch( cleanUpProcessedWeek()  )
     }
 
     
   }
 
   /*Open the modal and validate the clicked option*/ 
-  showUpmodalWithInfo( clickedBtnText,weekId,weekNumber ){
-    this.setState({ 
-      clickedBtnText:clickedBtnText,
-      weekSelectedId:weekId,
-      weekSelectedNumber:weekNumber,
-      modalBody:`Are you sure you want to ${clickedBtnText} week #${weekNumber} ?`,
-      showModal:true
-    });
+  showUpmodalWithInfo( info ){
+    this.setState( info );
   }
-
-  
 
   render() {
     const UsersDropdown="";
@@ -200,8 +218,8 @@ class Welcome extends Component {
           }
           
           <div className="fields-section buttons-section">
-            <Button bsStyle="success" onClick={ ()=>{ this.onClickApproveOrDenyBtn("approve") } }>Accept</Button>
-            <Button bsStyle="danger" onClick={ ()=>{ this.onClickApproveOrDenyBtn("reject") } }>Reject</Button>
+            <Button bsStyle="success" onClick={ ()=>{ this.onClickApproveOrDenyBtn("approved") } }>Accept</Button>
+            <Button bsStyle="danger" onClick={ ()=>{ this.onClickApproveOrDenyBtn("rejected") } }>Reject</Button>
           </div>
       </div>
     );

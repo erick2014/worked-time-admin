@@ -29,7 +29,12 @@ export function* fetchWeeks(action) {
           weeksInDay.push( week["days_in_week"][j]["day_number"] )
         }
 
-        let weekObj={ "week_number":week["week_number"] ,"week_id":week["week_id"],"days_in_week":weeksInDay }
+        let weekObj={ 
+          "week_number":week["week_number"] ,
+          "week_id":week["week_id"],
+          "days_in_week":weeksInDay ,
+          "approvers":week["approvers"]
+        }
         newWeeksList.push( weekObj )
         
       }
