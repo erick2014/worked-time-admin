@@ -75,7 +75,7 @@ class Welcome extends Component {
     this.setState()
   }
 
-  getWeekDetails(monthNumber){
+  getWeekDetails( monthNumber,year ){
     //validate the user id
     if(!this.state.userId ){
       let info={ modalBody:`Please select an user`,showModal:true,modalMode:"informative" }
@@ -85,7 +85,7 @@ class Welcome extends Component {
       //reset modal mode
       this.setState({modalMode:"validation"})
       //dispatch an action to get all weeks using the selected user and month
-      this.props.dispatch( fetchWeeksRequest( monthNumber,this.state.userId ) )
+      this.props.dispatch( fetchWeeksRequest( monthNumber, this.state.userId, year ) )
     }
     
   }
@@ -94,7 +94,7 @@ class Welcome extends Component {
     let currentDate=date.format("l")
     let dateList=currentDate.split("/");
     this.setState({ startDate: date,selectedMonth:dateList[0],selectedDay:dateList[1] });
-    this.getWeekDetails( dateList[0] );
+    this.getWeekDetails( dateList[0], dateList[2]);
   }
 
   onChangeSelectOption(userObj){
@@ -154,7 +154,6 @@ class Welcome extends Component {
     const {  processedWeek,dispatch }=this.props
 
     if( this.state.modalMode=="validation" ){
-      debugger;
       //validate if we have the approverId
       if( this.state.approvers && this.state.approvers.length>0 ) approverId=this.state.approvers[0];
       else return false;
@@ -182,7 +181,9 @@ class Welcome extends Component {
     const UsersDropdown="";
     let weekDetailsComp="";
     let weeksItems=[];
-    const { users:{users},weeks }=this.props;
+    const { users,weeks }=this.props;
+
+    console.log("props weeks",weeks)
 
     return (
       <div className="container">

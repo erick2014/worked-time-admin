@@ -8,11 +8,13 @@ import { api } from '../api'
 export function* fetchWeeks(action) {
   try {
     
-    const { monthNumber,userId }=action.payload;
+    const { monthNumber,userId, year }=action.payload;
 
     let weeks={};
 
-    const weeksFromServer = yield call( api.getWeeks,monthNumber,userId )
+    debugger;
+
+    const weeksFromServer = yield call( api.getWeeks,monthNumber,userId,year )
     //validate response data
     if( weeksFromServer && weeksFromServer.data ) weeks=weeksFromServer.data;
     
