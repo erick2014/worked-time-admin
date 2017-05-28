@@ -3,14 +3,17 @@ import { connect } from "react-redux";
 import { Button } from "react-bootstrap";
 import "../stylesheets/welcome.css";
 
+/*Custom components*/
 import UsersDatePicker from './UsersDatePicker';
 import UsersSelect from './UsersSelect';
 import WeekDetails from './WeekDetails';
+import MyModal from './MyModal';
 
 /*date picker stuff*/
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
+
 
 import { fetchUsersRequest,fetchWeeksRequest } from '../actions';
 
@@ -22,20 +25,34 @@ class Welcome extends Component {
       userId:"",
       startDate:"",
       selectedMonth:"",
-      showWeekDetails:false
+      showWeekDetails:false,
+      modalTitle:"",
+      modalBody:"",
+      showModal:false,
+      weekSelectedId:"",
+      weekSelectedNumber:""
     }
     this.onClickDatePicker=this.onClickDatePicker.bind(this);
     this.onChangeSelectOption=this.onChangeSelectOption.bind(this);
+
+    /*Approve and reject handlers*/
     this.getWeekDetails=this.getWeekDetails.bind(this);
     this.getWeekToAprove=this.getWeekToAprove.bind(this);
+    this.onClickApproveOrDenyBtn=this.onClickApproveOrDenyBtn.bind(this);
+
+    /*Modal handlers*/
+    this.onClickCloseModal=this.onClickCloseModal.bind(this);
+    this.onClickAcceptModal=this.onClickAcceptModal.bind(this);
+    this.showUpmodalWithInfo=this.showUpmodalWithInfo.bind(this);
+
   }
   componentWillMount(){
     //fetch users 
     this.props.dispatch( fetchUsersRequest() );
-    
   }
 
   getWeekDetails(monthNumber){
+    //dispatch an action to get all weeks using the selected user and month
     this.props.dispatch( fetchWeeksRequest( monthNumber,this.state.userId ) )
   }
 
@@ -49,14 +66,20 @@ class Welcome extends Component {
   onChangeSelectOption(userObj){
     let userId=userObj.target.value;
     this.setState({userId: userId });
-    
   }
 
-  getWeekToAprove(){
+  /*Approve or deny button handler*/
+  onClickApproveOrDenyBtn( clickedBtn ){
+    this.getWeekToAprove( clickedBtn );
+  }
+
+  /*Get the week to approve or reject*/
+  getWeekToAprove( clickedBtn ){
     let selectedDayNum=parseInt(this.state.selectedDay);
     const {weeks}=this.props;
-    let weekId="";
-    let weekNumber="";
+    let weekId=null;
+    let weekNumber=null;
+
     //look for the corresponding week id using the choosen day in calendar
     for( var i=0;i<weeks.length;i++ ){
        let week=weeks[i];
@@ -66,7 +89,32 @@ class Welcome extends Component {
         break;
        }
     }
+
+    if( weekId ) {
+      this.showUpmodalWithInfo( clickedBtn,weekId,weekNumber );
+    }
       
+  }
+
+  /*Close option handler for modal*/ 
+  onClickCloseModal(){
+    this.setState({ showModal:false });
+  }
+
+  /*Accept option handler for modal*/
+  onClickAcceptModal(){
+    //dispatch the action to approve or deny a week
+    console.log("going to aprove the week")
+  }
+
+  /*Open the modal and validate the clicked option*/ 
+  showUpmodalWithInfo( clickedBtnText,weekId,weekNumber ){
+    this.setState({ 
+      weekSelectedId:weekId,
+      weekSelectedNumber:weekNumber,
+      modalBody:`Are you sure you want to ${clickedBtnText} week #${weekNumber} ?`,
+      showModal:true
+    });
   }
 
   render() {
@@ -79,6 +127,13 @@ class Welcome extends Component {
 
     return (
       <div className="container">
+
+          <MyModal 
+            showModal={this.state.showModal}
+            body={this.state.modalBody}
+            onAccept={ this.onClickAcceptModal }
+            onClose={ this.onClickCloseModal }
+          />
 
           <div className="fields-section">
             <div className="label-box"> <span>Select user:</span> </div>
@@ -104,8 +159,8 @@ class Welcome extends Component {
           }
           
           <div className="fields-section buttons-section">
-            <Button bsStyle="success" onClick={this.getWeekToAprove}>Accept</Button>
-            <Button bsStyle="danger">Reject</Button>
+            <Button bsStyle="success" onClick={ ()=>{ this.onClickApproveOrDenyBtn("approve") } }>Accept</Button>
+            <Button bsStyle="danger" onClick={ ()=>{ this.onClickApproveOrDenyBtn("reject") } }>Reject</Button>
           </div>
       </div>
     );
