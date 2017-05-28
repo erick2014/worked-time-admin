@@ -15,7 +15,7 @@ import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
 
 
-import { fetchUsersRequest,fetchWeeksRequest } from '../actions';
+import { fetchUsersRequest,fetchWeeksRequest,approveWeekRequest } from '../actions';
 
 // App component
 class Welcome extends Component {
@@ -41,8 +41,8 @@ class Welcome extends Component {
     this.onClickApproveOrDenyBtn=this.onClickApproveOrDenyBtn.bind(this);
 
     /*Modal handlers*/
-    this.onClickCloseModal=this.onClickCloseModal.bind(this);
-    this.onClickAcceptModal=this.onClickAcceptModal.bind(this);
+    this.onClickCloseBtnModal=this.onClickCloseBtnModal.bind(this);
+    this.onClickAcceptBtnModal=this.onClickAcceptBtnModal.bind(this);
     this.showUpmodalWithInfo=this.showUpmodalWithInfo.bind(this);
 
   }
@@ -97,14 +97,15 @@ class Welcome extends Component {
   }
 
   /*Close option handler for modal*/ 
-  onClickCloseModal(){
+  onClickCloseBtnModal(){
     this.setState({ showModal:false });
   }
 
   /*Accept option handler for modal*/
-  onClickAcceptModal(){
+  onClickAcceptBtnModal(){
     //dispatch the action to approve or deny a week
-    console.log("going to aprove the week")
+    console.log("approving with week id ",this.state.weekSelectedId)
+    this.props.dispatch( approveWeekRequest( this.state.weekSelectedId, 3, 'approved' ) );
   }
 
   /*Open the modal and validate the clicked option*/ 
@@ -131,8 +132,8 @@ class Welcome extends Component {
           <MyModal 
             showModal={this.state.showModal}
             body={this.state.modalBody}
-            onAccept={ this.onClickAcceptModal }
-            onClose={ this.onClickCloseModal }
+            onAccept={ this.onClickAcceptBtnModal }
+            onClose={ this.onClickCloseBtnModal }
           />
 
           <div className="fields-section">
