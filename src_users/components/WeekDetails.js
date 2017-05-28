@@ -16,10 +16,7 @@ class WeekDetails extends Component {
      if( weeks && weeks.length>0 ){
        
       weeksItems=weeks.map( (week,index)=>{
-        // let daysInWeek=week.days_in_week;
-        //get each day within the week
-        let daysInWeek=week.days_in_week.map( (day)=> day.day_number );
-        daysInWeek=daysInWeek.join();
+        let daysInWeek=week.days_in_week.join();
         return <div key={index}>
                   <div>Week <span>{week.week_number}, Days: {daysInWeek}</span></div>
                 </div>

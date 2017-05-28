@@ -4,10 +4,10 @@ import {
 } from '../constants'
 
 
-export function fetchWeeksRequest(monthNumber) {
+export function fetchWeeksRequest(monthNumber,userId) {
   return {
     type: FETCH_WEEKS_REQUEST,
-    payload:{ monthNumber }
+    payload:{ monthNumber,userId }
   }
 }
 

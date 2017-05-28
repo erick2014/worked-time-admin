@@ -7,13 +7,41 @@ import { api } from '../api'
 
 export function* fetchWeeks(action) {
   try {
-    console.log("fetching weeks");
+    
+    const { monthNumber,userId }=action.payload;
+
     let weeks={};
-    const weeksFromServer = yield call( api.getWeeks,action.payload.monthNumber )
+
+    const weeksFromServer = yield call( api.getWeeks,monthNumber,userId )
     //validate response data
     if( weeksFromServer && weeksFromServer.data ) weeks=weeksFromServer.data;
-    //sent data to redux
+    
+    if( weeks.weeks instanceof Array ){
+      
+      let newWeeksList=[];
+      weeks=weeks.weeks;
+
+      for( var i=0;i<weeks.length;i++ ){
+        let week=weeks[i];
+        let weeksInDay=[];
+
+        for( var j=0;j<week.days_in_week.length;j++ ){
+          weeksInDay.push( week["days_in_week"][j]["day_number"] )
+        }
+
+        let weekObj={ "week_number":week["week_number"] ,"week_id":week["week_id"],"days_in_week":weeksInDay }
+        newWeeksList.push( weekObj )
+        
+      }
+      //sent data to redux
+      yield put( weeksActions.setWeeks(newWeeksList) )
+    }
+    else{
+       //sent data to redux
     yield put( weeksActions.setWeeks(weeks) )
+    }
+
+   
     
   } catch (e) {
     console.error(`${action.type} failed: ${e.message}`)

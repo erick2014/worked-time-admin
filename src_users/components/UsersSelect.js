@@ -17,7 +17,7 @@ class UsersSelect extends Component {
     })
 
     return(
-      <FormControl componentClass="select" placeholder="select" onChange={onChangeSelectOption}>
+      <FormControl componentClass="select" placeholder="select" onChange={ (date)=>{onChangeSelectOption(date)} }>
         <option value="">Select</option>
         {usersItems}
       </FormControl>
