@@ -6,7 +6,6 @@ import { configureStore } from '../store'
 import routes from '../routes'
 
 const store = configureStore(browserHistory)
-const { dispatch, getState } = store
 const history = syncHistoryWithStore(browserHistory, store)
 
 function Root() {

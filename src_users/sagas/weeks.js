@@ -12,8 +12,6 @@ export function* fetchWeeks(action) {
 
     let weeks={};
 
-    debugger;
-
     const weeksFromServer = yield call( api.getWeeks,monthNumber,userId,year )
     //validate response data
     if( weeksFromServer && weeksFromServer.data ) weeks=weeksFromServer.data;

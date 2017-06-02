@@ -70,11 +70,6 @@ class Welcome extends Component {
     this.props.dispatch( fetchUsersRequest() );
   }
 
-  showUpResponseMessageInModal( processedWeek ){
-    //set the message to show up in modal
-    this.setState()
-  }
-
   getWeekDetails( monthNumber,year ){
     //validate the user id
     if(!this.state.userId ){
